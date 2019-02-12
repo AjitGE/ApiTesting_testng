@@ -51,7 +51,7 @@ public class ExcelRead {
 			 }
 		
 		 if (!b) {
-				throw new Exception("TestId is missing! Please add TestId tag in feature file:");
+				throw new Exception("TestId is missing! Please use methodname tag in feature file:");
 			}
 		return mName;
 		

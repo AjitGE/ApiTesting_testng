@@ -95,7 +95,7 @@ public class ApiTesting {
 		WebServiceHandler.setEndPointUrl("#endPoint_Url");
 		Response response = WebServiceHandler.postrestcalls();
 		String actual_Status = response.getBody().jsonPath().get("status");
-		Assert.assertEquals(actual_Status, "SUCCESS");
+		Assert.assertEquals(actual_Status, "ERROR");
 
 		
 
@@ -262,7 +262,52 @@ public class ApiTesting {
 	}
 	
 	@Test
-	public void test_OPTIONS_AMERICAN_SELL_PUT_expiryDate_validation() throws Exception {
+	public void test_OPTIONS_AMERICAN_SELL_PUT_exerciseStartDate_tradeDAte_validation() throws Exception {
+		WebServiceHandler.setBody("#Body");
+		WebServiceHandler.setHeader("#Header1", "#Header2");
+		WebServiceHandler.setEndPointUrl("#endPoint_Url");
+		Response response = WebServiceHandler.postrestcalls();
+		String actual_Status = response.getBody().jsonPath().get("status");
+		Assert.assertEquals(actual_Status, "ERROR");
+		String actual_Message1="";
+		try {
+		 actual_Message1 = response.getBody().jsonPath().get("messages[0]");
+		}
+		catch(NullPointerException var ) {
+			Assert.assertEquals(actual_Message1,"Exercise start date 2017-08-10 cannot be null and it has to be after trade date 2017-08-11 ");
+		}
+	}
+		@Test
+		public void test_OPTIONS_AMERICAN_SELL_PUT_exerciseStartDate_expiryDate_validation() throws Exception {
+			WebServiceHandler.setBody("#Body");
+			WebServiceHandler.setHeader("#Header1", "#Header2");
+			WebServiceHandler.setEndPointUrl("#endPoint_Url");
+			Response response = WebServiceHandler.postrestcalls();
+			String actual_Status = response.getBody().jsonPath().get("status");
+			Assert.assertEquals(actual_Status, "ERROR");
+			String actual_Message1="";
+			try {
+			 actual_Message1 = response.getBody().jsonPath().get("messages[0]");
+			}
+			catch(NullPointerException var ) {
+				Assert.assertEquals(actual_Message1,"Exercise start date 2017-08-22 cannot be null and it has to be after trade date 2017-08-21 ");
+			}
+	}
+	
+	@Test
+	public void test_OPTIONS_AMERICAN_SELL_PUT_expiryDate_before_deliveryDate_validation() throws Exception {
+		WebServiceHandler.setBody("#Body");
+		WebServiceHandler.setHeader("#Header1", "#Header2");
+		WebServiceHandler.setEndPointUrl("#endPoint_Url");
+		Response response = WebServiceHandler.postrestcalls();
+		String actual_Status = response.getBody().jsonPath().get("status");
+		Assert.assertEquals(actual_Status, "SUCCESS");
+		
+
+	}
+	
+	@Test
+	public void test_OPTIONS_AMERICAN_SELL_PUT_expiryDate_after_deliveryDate_validation() throws Exception {
 		WebServiceHandler.setBody("#Body");
 		WebServiceHandler.setHeader("#Header1", "#Header2");
 		WebServiceHandler.setEndPointUrl("#endPoint_Url");
@@ -270,11 +315,50 @@ public class ApiTesting {
 		String actual_Status = response.getBody().jsonPath().get("status");
 		Assert.assertEquals(actual_Status, "ERROR");
 		String actual_Message1 = response.getBody().jsonPath().get("messages[0]");
-		Assert.assertEquals(actual_Message1,"Expiry date 2019-03-10 has to be before delivery date 2019-02-12 ");
-		String actual_Message2 = response.getBody().jsonPath().get("messages[1]");
-		Assert.assertEquals(actual_Message2,"Expiry date [2019-03-10] cannot fall on Saturday/Sunday");
-		String actual_Message3 = response.getBody().jsonPath().get("messages[2]");
-		Assert.assertEquals(actual_Message3,"Premium date 2019-03-08 has to be before delivery date 2019-02-10 ");
+		Assert.assertEquals(actual_Message1,"Expiry date 2019-02-12 has to be before delivery date 2019-02-10 ");
+
+		
+
+	}
+	
+	@Test
+	public void test_OPTIONS_AMERICAN_SELL_PUT_premiumDate_after_deliveryDate_validation() throws Exception {
+		WebServiceHandler.setBody("#Body");
+		WebServiceHandler.setHeader("#Header1", "#Header2");
+		WebServiceHandler.setEndPointUrl("#endPoint_Url");
+		Response response = WebServiceHandler.postrestcalls();
+		String actual_Status = response.getBody().jsonPath().get("status");
+		Assert.assertEquals(actual_Status, "ERROR");
+		String actual_Message1 = response.getBody().jsonPath().get("messages[0]");
+		Assert.assertEquals(actual_Message1,"Premium date 2019-02-12 has to be before delivery date 2019-02-10 ");
+
+		
+
+	}
+	
+	@Test
+	public void test_OPTIONS_AMERICAN_SELL_PUT_premiumDate_before_deliveryDate_validation() throws Exception {
+		WebServiceHandler.setBody("#Body");
+		WebServiceHandler.setHeader("#Header1", "#Header2");
+		WebServiceHandler.setEndPointUrl("#endPoint_Url");
+		Response response = WebServiceHandler.postrestcalls();
+		String actual_Status = response.getBody().jsonPath().get("status");
+		Assert.assertEquals(actual_Status, "SUCCESS");
+		
+
+		
+
+	}
+	
+	@Test
+	public void test_Negative_OPTIONS_AMERICAN_SELL_PUT_without_exerciseStartDate_validation() throws Exception {
+		WebServiceHandler.setBody("#Body");
+		WebServiceHandler.setHeader("#Header1", "#Header2");
+		WebServiceHandler.setEndPointUrl("#endPoint_Url");
+		Response response = WebServiceHandler.postrestcalls();
+		Integer actual_Status = response.getStatusCode();
+		Assert.assertEquals(actual_Status, new Integer(400));
+		
 
 	}
 	
